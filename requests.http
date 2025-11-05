@@ -1,0 +1,79 @@
+@TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGI3NzRiZGY3NTI0Y2ZmNzM4YzNiMSIsImVtYWlsIjoiYWRtaW5AdGVzdC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NjIzNjAyNzEsImV4cCI6MTc2MjM2Mzg3MX0.NuH-Dr9xuqMFtZ2EpL_wML9CeNPHdc7UEyF2dxutgA8
+@CATEGORY_ID=690b7cbc36545e296b919f66
+@PRODUCT_ID=690b7e7136545e296b919f70
+
+### 1) Registrar usuario
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "email": "admin@test.com",
+  "password": "123456",
+  "role": "admin"
+}
+
+### 2) Login (obtiene TOKEN)
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+
+{
+  "email": "admin@test.com",
+  "password": "123456"
+}
+
+
+### 3) Crear categoría (usar TOKEN)
+POST http://localhost:3000/api/categories
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "name": "Bebidas",
+  "description": "Línea de bebidas"
+}
+
+### 4) Listar categorías (para conseguir el _id)
+GET http://localhost:3000/api/categories
+
+### 5) Crear producto (usar TOKEN y CATEGORY_ID)
+POST http://localhost:3000/api/products
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "name": "Agua mineral 500ml",
+  "description": "Sin gas",
+  "price": 800,
+  "stock": 120,
+  "category": "{{CATEGORY_ID}}"
+}
+
+### 6) Listar productos (con populate y filtros)
+GET http://localhost:3000/api/products?search=agua&minPrice=500&maxPrice=1000&page=1&limit=10
+
+### 7) Obtener producto por ID
+GET http://localhost:3000/api/products/{{PRODUCT_ID}}
+
+### 8) Actualizar producto (PATCH)
+PATCH http://localhost:3000/api/products/{{PRODUCT_ID}}
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "price": 950,
+  "stock": 80
+}
+
+### 9) Borrar producto (DELETE)
+DELETE http://localhost:3000/api/products/{{PRODUCT_ID}}
+Authorization: Bearer {{TOKEN}}
+
+### 10) Actualizar categoría (PATCH)
+PATCH http://localhost:3000/api/categories/{{CATEGORY_ID}}
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "description": "Línea de bebidas frías"
+}
